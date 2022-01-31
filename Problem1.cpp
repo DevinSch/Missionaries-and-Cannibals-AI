@@ -13,9 +13,9 @@ int main() {
   Cannibal one;
   Cannibal two;
   Cannibal three;
-  Missionarie four;
-  Missionarie five;
-  Missionarie six;
+  Missionary four;
+  Missionary five;
+  Missionary six;
 
   shore1.addPerson(one);
   shore1.addPerson(two);
@@ -26,7 +26,6 @@ int main() {
 
   GameState game1;
   game1.saveGameState(shore1, shore2);
-
   //GameState start(shore1, shore2, boat);
   //test_Cases();
   BFS(game1);
@@ -39,8 +38,8 @@ int main() {
 void test_Cases() {
   Cannibal one;
   Cannibal two;
-  Missionarie three;
-  Missionarie four;
+  Missionary three;
+  Missionary four;
 
   std::cout << "Person one is a: " << one.getType() << "\n";
   std::cout << "Person two is a: " << two.getType() << "\n";
@@ -63,7 +62,7 @@ void test_Cases() {
 
   GameState test;
   GameState test2;
-  test2.setPreviousGameState(&test);
+  //test2.setPreviousGameState(&test);
   test.saveGameState(shore1, shore2);
   test2.saveGameState(testshore, shore2);
   std::cout << "Failed state? " << test.failedState() << "\n";
@@ -86,16 +85,15 @@ void test_Cases() {
 
 
 // Start state 6 people on shore1
-// 3 Cannibals and 3 Missionaries
+// 3 Cannibals and 3 Missionarys
 // Goal state 6 people on shore2
-// limitation Cannibals can never out number Missionaries
+// limitation Cannibals can never out number Missionarys
 void BFS(GameState world) {
   // Set up a queue
-  Missionarie missionarie_move;
+  Missionary Missionary_move;
   Cannibal cannibal_move;
   std::queue<GameState> game_state_queue;
   game_state_queue.push(world);
-  //game_state_queue.push(world);
   GameState current;
 
   while(!game_state_queue.empty()) {
@@ -104,13 +102,13 @@ void BFS(GameState world) {
     std::cout << "Copy front of queue\n";
     game_state_queue.pop();
     std::cout << "pop the queue\n";
-    std::cout << "queue length = " << game_state_queue.size() << "\n";
+    std::cout << "queue length = " << game_state_queue.size() + 1 << "\n";
 
-    std::cout << "M = " << current.start.missionarie_population.size() << "\n";
+    std::cout << "M = " << current.start.Missionary_population.size() << "\n";
     std::cout << "C = " <<current.start.cannibal_population.size() << "\n";
 
     // check current state for goal or failure
-    if (current.goalState() == true) {
+    if (current.goalState() == 1) {
       std::cout << "Winner Winner \n\n";
       current.printActions();
       break; // Breaks while loop immediately
@@ -119,58 +117,97 @@ void BFS(GameState world) {
       std::cout << "Should have failed \n\n";
       continue; // restart the while loop
     } else {
-      std::cout << "Do the other things here? Maybe\n";
+      if(current.boatAtStart() == 1) {
+        GameState current2;
+        current2 = current;
+        current2.moveBoat();
+        //************** Two Missionary move******************
+        if (current2.start.Missionary_population.size() >= 2) {
+          GameState move_MM;
+          move_MM = current2;
+          move_MM.start.removePerson(Missionary_move);
+          move_MM.start.removePerson(Missionary_move);
+          move_MM.end.addPerson(Missionary_move);
+          move_MM.end.addPerson(Missionary_move);
+          move_MM.addAction("Two Missionaries move to the other side\n");
+          game_state_queue.push(move_MM);
+        }
 
-      //************** Two Missionarie move******************
-      if (current.start.missionarie_population.size() >= 2) {
-        GameState move_MM;
-        move_MM = current;
-        move_MM.start.removePerson(missionarie_move);
-        move_MM.start.removePerson(missionarie_move);
-        move_MM.end.addPerson(missionarie_move);
-        move_MM.end.addPerson(missionarie_move);
-        move_MM.setPreviousGameState(&current);
-        move_MM.addAction("Two Missionaries move to the other side\n");
-        game_state_queue.push(move_MM);
-      }
+        //************** Two Cannibals move******************
+        if(current2.start.cannibal_population.size() >= 2) {
+          GameState move_CC;
+          move_CC = current2;
+          move_CC.start.removePerson(cannibal_move);
+          move_CC.start.removePerson(cannibal_move);
+          move_CC.end.addPerson(cannibal_move);
+          move_CC.end.addPerson(cannibal_move);
+          move_CC.addAction("Two Cannibals move to the other side\n");
+          game_state_queue.push(move_CC);
+        }
 
-      //************** Two Cannibals move******************
-      if (current.start.cannibal_population.size() >= 2) {
-        GameState move_CC;
-        move_CC = current;
-        move_CC.start.removePerson(cannibal_move);
-        move_CC.start.removePerson(cannibal_move);
-        move_CC.end.addPerson(cannibal_move);
-        move_CC.end.addPerson(cannibal_move);
-        move_CC.setPreviousGameState(&current);
-        move_CC.addAction("Two Cannibals move to the other side\n");
-        game_state_queue.push(move_CC);
-      }
-
-      //************** one of each move******************
-      if (current.start.cannibal_population.size() >= 1 &&
-            current.start.missionarie_population.size() >= 1) {
-        GameState move_MC;
+        //************** one of each move******************
+        if(current2.start.cannibal_population.size() >= 1 &&
+              current2.start.Missionary_population.size() >= 1) {
+          GameState move_MC;
+          move_MC = current2;
+          move_MC.start.removePerson(Missionary_move);
+          move_MC.start.removePerson(cannibal_move);
+          move_MC.end.addPerson(Missionary_move);
+          move_MC.end.addPerson(cannibal_move);
+          move_MC.addAction("One Missionary and one Cannibal move to the other side\n");
+          game_state_queue.push(move_MC);
+        }
+      } else { // Boat is not at start
+        GameState move_M, move_MM, move_C, move_CC, move_MC;
+        current.moveBoat();
+        move_M = current;
+        move_C = current;
         move_MC = current;
-        move_MC.start.removePerson(missionarie_move);
-        move_MC.start.removePerson(cannibal_move);
-        move_MC.end.addPerson(missionarie_move);
-        move_MC.end.addPerson(cannibal_move);
-        move_MC.setPreviousGameState(&current);
-        move_MC.addAction("One Missionarie and one Cannibal move to the other side\n");
-        game_state_queue.push(move_MC);
-      }
+
+        // **************** One or two Missionaries return in boat*****************
+        if(move_M.goalState() == 0 && move_M.end.Missionary_population.size() > 0) {
+          move_M.start.addPerson(Missionary_move);
+          move_M.end.removePerson(Missionary_move);
+          move_MM = move_M;
+          move_M.addAction("One Missionary returns to the start on the boat\n");
+          game_state_queue.push(move_M);
+          if (move_MM.end.Missionary_population.size() > 0) {
+            move_MM.start.addPerson(Missionary_move);
+            move_MM.end.removePerson(Missionary_move);
+            move_MM.addAction("Two Missionaries return to the start on the boat\n");
+            game_state_queue.push(move_MM);
+          }
+        }
+
+        // ******************* One or two Cannibals return in boat *****************
+        if(move_C.goalState() == 0 && move_C.end.cannibal_population.size() > 0) {
+          move_C.start.addPerson(cannibal_move);
+          move_C.end.removePerson(cannibal_move);
+          move_CC = move_C;
+          move_C.addAction("One Cannibal returns to the start on the boat\n");
+          game_state_queue.push(move_C);
+          if (move_CC.end.cannibal_population.size() > 0) {
+            move_CC.start.addPerson(cannibal_move);
+            move_CC.end.removePerson(cannibal_move);
+            move_CC.addAction("Two cannibals return to the start on the boat\n");
+            game_state_queue.push(move_CC);
+          }
+        }
+
+        // ****************** One of each return in boat
+        if(move_MC.goalState() == 0 && move_MC.end.Missionary_population.size() > 0
+            && move_MC.end.cannibal_population.size() > 0) {
+          move_MC.start.addPerson(Missionary_move);
+          move_MC.end.removePerson(Missionary_move);
+          move_MC.start.addPerson(cannibal_move);
+          move_MC.end.removePerson(cannibal_move);
+          move_MC.addAction("One Missionary and one cannibal returns to the start on the boat\n");
+          game_state_queue.push(move_MC);
+        }
 
 
-          // need to sort out how the boat will be returning
-          // Also Maybe I should Implement the boat
-          // Then maybe double check spelling
-          // refactor and remove some unused code
-    }
-    // If the boat needs to return to start, do it here
-
+      } // End of boat not at start
+    } // End of if else state check in BFS
     std::cout << "End of while loop\n\n";
-  }
-
-// Game should be over here
-}
+  } // End of while loop
+} // End of program

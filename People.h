@@ -1,8 +1,9 @@
 #include <vector>
+#include <string>
 
 /**
 // Person Class structure
-// Person can be Cannibal or Missionarie
+// Person can be Cannibal or Missionary
 **/
 class Person {
 public:
@@ -17,9 +18,9 @@ public:
 private:
 };
 
-class Missionarie : public Person {
+class Missionary : public Person {
 public:
-  Missionarie() {type = "Missionarie";}
+  Missionary() {type = "Missionary";}
 private:
 };
 
@@ -36,27 +37,27 @@ public:
   Location & operator = (Location copy) {
     area = copy.area;
     this->cannibal_population.clear();
-    this->missionarie_population.clear();
+    this->Missionary_population.clear();
     while(!copy.cannibal_population.empty()) {
       cannibal_population.push_back(copy.cannibal_population.back());
       copy.cannibal_population.pop_back();
     }
-    while(!copy.missionarie_population.empty()) {
-      missionarie_population.push_back(copy.missionarie_population.back());
-      copy.missionarie_population.pop_back();
+    while(!copy.Missionary_population.empty()) {
+      Missionary_population.push_back(copy.Missionary_population.back());
+      copy.Missionary_population.pop_back();
     }
     return *this;
   }
 
   int getPopulation() {
     return cannibal_population.size()
-            + missionarie_population.size();}
+            + Missionary_population.size();}
 
   void addPerson(Person traveler) {
     if (traveler.getType() == "Cannibal") {
       cannibal_population.push_back(traveler);
     } else {
-      missionarie_population.push_back(traveler);
+      Missionary_population.push_back(traveler);
     }
   }
 
@@ -64,23 +65,22 @@ public:
     if (traveler.getType() == "Cannibal") {
       cannibal_population.pop_back();
     } else {
-      missionarie_population.pop_back();
+      Missionary_population.pop_back();
     }
   }
 
 
   std::string area;
   std::vector<Person> cannibal_population;
-  std::vector<Person> missionarie_population;
+  std::vector<Person> Missionary_population;
 };
+
 /*
-class Vehicle : public Location {
+class Vehicle {
 public:
-  Vehicle(std::string name, int max) {name = area; num_seats = max;}
+  Vehicle() {}
 private:
-  std::vector<Person> seats;
-  int num_seats;
-};*/
+};/*
 
 
 /**
@@ -94,39 +94,36 @@ public:
   GameState & operator = (GameState copy) {
     start = copy.start;
     end = copy.end;
-    previous = copy.previous;
+    //previous = copy.previous;
     actions = copy.actions;
+    boat_position = copy.boat_position;
     return *this;
   }
 
   void saveGameState(Location one, Location two) {
     start = one;
     end = two;
-    //transport = three;
-    previous = NULL;
   }
 
   bool failedState() {
-    if (start.cannibal_population.size() > start.missionarie_population.size()
-            && start.missionarie_population.size() != 0)
+    if (start.cannibal_population.size() > start.Missionary_population.size()
+            && start.Missionary_population.size() != 0)
       return true;
-    else if (end.cannibal_population.size() > end.missionarie_population.size()
-            && end.missionarie_population.size() != 0)
+    else if (end.cannibal_population.size() > end.Missionary_population.size()
+            && end.Missionary_population.size() != 0)
       return true;
     else
       return false;
   }
 
   bool goalState() {
-    if (end.cannibal_population.size() == 3 && end.missionarie_population.size() == 3)
+    if (end.cannibal_population.size() == 3 && end.Missionary_population.size() == 3)
       return true;
     else
       return false;
   }
 
-  void setPreviousGameState(GameState* parent) {
-    previous = parent;
-  }
+  //void setPreviousGameState(GameState* parent) { previous = parent; }
 
   void printActions() {
     std::cout << "The moves in order to win were:\n";
@@ -137,14 +134,27 @@ public:
 
   void addAction(std::string text) {actions.push_back(text);}
 
+  bool boatAtStart() {
+    if (boat_position == "Start") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void moveBoat() {
+    if (boat_position == "Start") {
+      boat_position = "End";
+    } else if (boat_position == "End") {
+      boat_position = "Start";
+    }
+  }
+
   Location start;     // Starting position
   Location end;       // Ending position
-
 private:
-  //Location start;     // Starting position
-  //Location end;       // Ending position
-  //Location transport; // Do I need a location for a boat?
+  std::string boat_position = "Start";
   std::vector<std::string> actions;
-  GameState *previous;// Link to the gamestate that steamed this one
+  //GameState *previous;// Link to the gamestate that steamed this one
                       // If Null it is the root node
 };
