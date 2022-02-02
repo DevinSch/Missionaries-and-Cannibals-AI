@@ -28,7 +28,6 @@ private:
 // Location Class structure
 // 2 Locations start and end.
 */
-
 class Location {
 public:
   Location() {}
@@ -48,10 +47,6 @@ public:
     }
     return *this;
   }
-
-  int getPopulation() {
-    return cannibal_population.size()
-            + Missionary_population.size();}
 
   void addPerson(Person traveler) {
     if (traveler.getType() == "Cannibal") {
@@ -75,14 +70,6 @@ public:
   std::vector<Person> Missionary_population;
 };
 
-/*
-class Vehicle {
-public:
-  Vehicle() {}
-private:
-};/*
-
-
 /**
 // GameState class structure
 // Each game state has the two location as well as there populations
@@ -90,6 +77,10 @@ private:
 class GameState {
 public:
   GameState() {}
+  GameState(Location one, Location two) {
+    start = one;
+    end = two;
+  }
 
   GameState & operator = (GameState copy) {
     start = copy.start;
@@ -98,11 +89,6 @@ public:
     actions = copy.actions;
     boat_position = copy.boat_position;
     return *this;
-  }
-
-  void saveGameState(Location one, Location two) {
-    start = one;
-    end = two;
   }
 
   bool failedState() {
@@ -122,8 +108,6 @@ public:
     else
       return false;
   }
-
-  //void setPreviousGameState(GameState* parent) { previous = parent; }
 
   void printActions() {
     std::cout << "The moves in order to win were:\n";
@@ -155,6 +139,4 @@ public:
 private:
   std::string boat_position = "Start";
   std::vector<std::string> actions;
-  //GameState *previous;// Link to the gamestate that steamed this one
-                      // If Null it is the root node
 };
