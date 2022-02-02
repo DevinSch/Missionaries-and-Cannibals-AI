@@ -1,5 +1,8 @@
+// Author: Devin Schafthuizen
+// Class: CPSC-3750
+// Date: Feb 1st/2022
+// Problem1: Cannibal and Missionary
 #include <vector>
-#include <string>
 
 /**
 // Person Class structure
@@ -80,6 +83,7 @@ public:
   GameState(Location one, Location two) {
     start = one;
     end = two;
+    boat_position = "Start";
   }
 
   GameState & operator = (GameState copy) {
@@ -137,6 +141,6 @@ public:
   Location start;     // Starting position
   Location end;       // Ending position
 private:
-  std::string boat_position = "Start";
+  std::string boat_position;
   std::vector<std::string> actions;
 };

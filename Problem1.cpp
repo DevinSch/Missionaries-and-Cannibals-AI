@@ -1,3 +1,7 @@
+// Author: Devin Schafthuizen
+// Class: CPSC-3750
+// Date: Feb 1st/2022
+// Problem1: Cannibal and Missionary
 #include <iostream>
 #include <queue>
 #include "./People.h"
@@ -14,18 +18,13 @@ int main() {
       shore1.addPerson(cannibal_Ken);
       shore1.addPerson(Missionary_Marry);
   }
-
   GameState game1(shore1, shore2);
+  std::cout << "Searching for solution using BFS\n";
   BFS(game1);
 
-  std::cout << "End of Program\n";
   return 0;
 }
 
-// Start state 6 people on shore1
-// 3 Cannibals and 3 Missionarys
-// Goal state 6 people on shore2
-// limitation Cannibals can never out number Missionarys
 void BFS(GameState world) {
   // Set up a queue
   Missionary Missionary_move;
@@ -37,24 +36,17 @@ void BFS(GameState world) {
   while(!game_state_queue.empty()) {
     // pop the front of the queue to inspect
     current = game_state_queue.front();
-    std::cout << "Copy front of queue\n";
     game_state_queue.pop();
-    std::cout << "pop the queue\n";
-    std::cout << "queue length = " << game_state_queue.size() + 1 << "\n";
-
-    std::cout << "M = " << current.start.Missionary_population.size() << "\n";
-    std::cout << "C = " <<current.start.cannibal_population.size() << "\n";
 
     // check current state for goal or failure
     if (current.goalState() == 1) {
-      std::cout << "Winner Winner \n\n";
+      std::cout << "Solution found! \n\n";
       current.printActions();
       std::cout << "******* All people are accross the river!! ******* \n";
       break; // Breaks while loop immediately
     } else if (current.failedState() == true) {
       // move onto the next gamestate to inspect
-      std::cout << "Should have failed \n\n";
-      continue; // restart the while loop
+      continue; // restart the while loop and discard current gamestate
     } else {
       if(current.boatAtStart() == 1) {
         GameState current2;
@@ -143,10 +135,7 @@ void BFS(GameState world) {
           move_MC.addAction("One Missionary and one cannibal returns to the start on the boat\n\n");
           game_state_queue.push(move_MC);
         }
-
-
       } // End of boat not at start
     } // End of if else state check in BFS
-    std::cout << "End of while loop\n\n";
   } // End of while loop
 } // End of program
