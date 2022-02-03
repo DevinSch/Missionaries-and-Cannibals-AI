@@ -1,7 +1,7 @@
 // Author: Devin Schafthuizen
-// Class: CPSC-3750
-// Date: Feb 1st/2022
-// Problem1: Cannibal and Missionary
+// Class: CPSC-3750 Artificial Intelligence
+// Date: Feb 1st, 2022
+// Assignment: 1 - Cannibal and Missionary
 #include <vector>
 
 /**
@@ -18,13 +18,11 @@ public:
 class Cannibal : public Person {
 public:
   Cannibal() {type = "Cannibal";}
-private:
 };
 
 class Missionary : public Person {
 public:
   Missionary() {type = "Missionary";}
-private:
 };
 
 /**
@@ -67,7 +65,6 @@ public:
     }
   }
 
-
   std::string area;
   std::vector<Person> cannibal_population;
   std::vector<Person> Missionary_population;
@@ -89,7 +86,6 @@ public:
   GameState & operator = (GameState copy) {
     start = copy.start;
     end = copy.end;
-    //previous = copy.previous;
     actions = copy.actions;
     boat_position = copy.boat_position;
     return *this;

@@ -1,7 +1,7 @@
 // Author: Devin Schafthuizen
-// Class: CPSC-3750
-// Date: Feb 1st/2022
-// Problem1: Cannibal and Missionary
+// Class: CPSC-3750 Artificial Intelligence
+// Date: Feb 1st, 2022
+// Assignment: 1 - Cannibal and Missionary
 #include <iostream>
 #include <queue>
 #include "./People.h"
@@ -26,9 +26,10 @@ int main() {
 }
 
 void BFS(GameState world) {
-  // Set up a queue
+  // People to move around
   Missionary Missionary_move;
   Cannibal cannibal_move;
+  // Set up a queue and gamestate to copy front of the queue to
   std::queue<GameState> game_state_queue;
   game_state_queue.push(world);
   GameState current;
@@ -45,10 +46,9 @@ void BFS(GameState world) {
       std::cout << "******* All people are accross the river!! ******* \n";
       break; // Breaks while loop immediately
     } else if (current.failedState() == true) {
-      // move onto the next gamestate to inspect
       continue; // restart the while loop and discard current gamestate
     } else {
-      if(current.boatAtStart() == 1) {
+      if(current.boatAtStart() == 1) { // Boat is on the start side of the river
         GameState current2;
         current2 = current;
         current2.moveBoat();
