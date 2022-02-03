@@ -25,4 +25,4 @@ ACTION COST: 1
  • Why do you think people have a hard time solving this puzzle, given that the state
  space is so simple?
 
- - I think people have a hard time with this people because of the amount of objects. which at the start doesn't seem like much. But after a few moves can be harder to keep track off. This type of object tracking is simple for the computer and can be done very quickly.![image](https://user-images.githubusercontent.com/61724378/152275475-00edb8ac-a576-47b1-9da6-0a523f3b739d.png)
+ - I think people have a hard time with this people because of the amount of objects. which at the start doesn't seem like much. But after a few moves can be harder to keep track off. This type of object tracking is simple for the computer and can be done very quickly.
